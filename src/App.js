@@ -1,25 +1,27 @@
-import logo from './logo.svg';
-import './App.css';
+import { useEffect, useState } from "react";
+import DataList from "./components/DataList";
+import SelectTypeForm from "./components/SelectTypeForm";
+import "./styles.css";
 
-function App() {
+export default function App() {
+  const [dataType, setDataType] = useState("");
+
+  const [data, setData] = useState(null);
+
+  console.log({ data });
+
+  useEffect(() => {
+    if (!dataType) return;
+
+    fetch(`https://swapi.dev/api/${dataType}/`)
+      .then((res) => res.json())
+      .then((data) => setData(data));
+  }, [dataType]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <SelectTypeForm setDataType={setDataType} />
+      {data && <DataList dataType={dataType} data={data.results} />}
     </div>
   );
 }
-
-export default App;
